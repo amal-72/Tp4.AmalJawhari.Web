@@ -13,6 +13,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>25</maven.compiler.release>
+
         <langchain4j.version>1.22.0</langchain4j.version>
         <langchain4j.google.version>1.22.0-beta32</langchain4j.google.version>
         <langchain4j.tavily.version>1.22.0-beta32</langchain4j.tavily.version>
@@ -25,21 +26,35 @@
                 <artifactId>langchain4j</artifactId>
                 <version>${langchain4j.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>dev.langchain4j</groupId>
                 <artifactId>langchain4j-google-genai</artifactId>
                 <version>${langchain4j.google.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>dev.langchain4j</groupId>
                 <artifactId>langchain4j-web-search-engine-tavily</artifactId>
                 <version>${langchain4j.tavily.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-document-parser-apache-tika</artifactId>
+                <version>${langchain4j.google.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-embeddings-bge-small-en-v15-q</artifactId>
+                <version>${langchain4j.google.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-        <!-- Jakarta EE 11 : fourni par Payara -->
+        <!-- Jakarta EE 11 fourni par Payara -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-web-api</artifactId>
@@ -47,7 +62,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Interface JSF -->
+        <!-- PrimeFaces -->
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
@@ -66,10 +81,22 @@
             <artifactId>langchain4j-google-genai</artifactId>
         </dependency>
 
-        <!-- Recherche Web Tavily (utile pour la fonctionnalité Web) -->
+        <!-- Tavily -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-web-search-engine-tavily</artifactId>
+        </dependency>
+
+        <!-- Extraction du contenu des PDF -->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-document-parser-apache-tika</artifactId>
+        </dependency>
+
+        <!-- Modèle d'embeddings BGE -->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-embeddings-bge-small-en-v15-q</artifactId>
         </dependency>
 
         <!-- Tests -->
@@ -82,7 +109,6 @@
     </dependencies>
 
     <build>
-        <finalName>TP4-Amal-Jawhari-Web</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -100,4 +126,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
