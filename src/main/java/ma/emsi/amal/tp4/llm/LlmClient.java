@@ -1,4 +1,5 @@
-package ma.emsi.amal.tp4.llm;
+ear
+        package ma.emsi.amal.tp4.llm;
 
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.memory.ChatMemory;
@@ -72,7 +73,7 @@ public class LlmClient implements Serializable {
         retrievers.put(
                 reseauxRetriever,
                 "Document contenant des informations sur les réseaux informatiques, "
-                        + "notamment les catégories LAN, MAN et WAN."
+                        + "notamment les catégories LAN, WAN et Internet."
         );
 
         // Test 2 : transformation de la question
@@ -98,11 +99,13 @@ public class LlmClient implements Serializable {
                 .build();
     }
 
+    // Définition du rôle système
     public void setSystemRole(String systemRole) {
         chatMemory.clear();
         chatMemory.add(SystemMessage.from(systemRole));
     }
 
+    // Envoi d'une question à l'assistant
     public String chat(String prompt) {
         return assistant.chat(prompt);
     }
