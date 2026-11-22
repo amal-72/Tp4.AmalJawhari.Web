@@ -54,6 +54,7 @@
     </dependencyManagement>
 
     <dependencies>
+
         <!-- Jakarta EE 11 fourni par Payara -->
         <dependency>
             <groupId>jakarta.platform</groupId>
@@ -99,6 +100,13 @@
             <artifactId>langchain4j-embeddings-bge-small-en-v15-q</artifactId>
         </dependency>
 
+        <!-- Logs SLF4J avec Logback -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.25</version>
+        </dependency>
+
         <!-- Tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -106,6 +114,7 @@
             <version>6.1.3</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>

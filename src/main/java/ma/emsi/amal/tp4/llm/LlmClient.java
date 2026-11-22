@@ -1,5 +1,4 @@
-ear
-        package ma.emsi.amal.tp4.llm;
+package ma.emsi.amal.tp4.llm;
 
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.memory.ChatMemory;
@@ -33,7 +32,7 @@ public class LlmClient implements Serializable {
     public LlmClient(RagService ragService) {
 
         // Création du modèle Gemini
-        String apiKey = System.getenv("GEMINI_KEY");
+        String apiKey = System.getenv("clegemini");
 
         ChatModel model = GoogleGenAiChatModel.builder()
                 .apiKey(apiKey)

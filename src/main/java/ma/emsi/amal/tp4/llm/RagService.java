@@ -1,4 +1,3 @@
-
 package ma.emsi.amal.tp4.llm;
 
 import dev.langchain4j.data.document.Document;
@@ -32,10 +31,12 @@ public class RagService {
     @PostConstruct
     public void init() {
 
+        System.out.println("====================================");
         System.out.println("Début de l'ingestion RAG...");
+        System.out.println("====================================");
 
         // Vérification de la clé API Gemini
-        String apiKey = System.getenv("GEMINI_KEY");
+        String apiKey = System.getenv("clegemini");
 
         if (apiKey == null || apiKey.isBlank()) {
             throw new IllegalStateException(
@@ -43,55 +44,100 @@ public class RagService {
             );
         }
 
+        System.out.println("Clé API Gemini détectée.");
+
         // Création du modèle d'embeddings multilingue
+        System.out.println("Initialisation du modèle d'embeddings...");
+
         embeddingModel = GoogleGenAiEmbeddingModel.builder()
                 .apiKey(apiKey)
                 .modelName("gemini-embedding-001")
                 .outputDimensionality(768)
                 .build();
 
+        System.out.println("Modèle d'embeddings initialisé.");
+
         // Ingestion des deux documents PDF
         ragStore = createEmbeddingStore("documents/rag.pdf");
         reseauxStore = createEmbeddingStore("documents/reseaux.pdf");
 
+        System.out.println("====================================");
         System.out.println("Ingestion des deux documents terminée.");
+        System.out.println("====================================");
     }
 
-    /**
+    /*
      * Charge un PDF, le découpe en segments,
      * génère les embeddings et les enregistre.
      */
     private EmbeddingStore<TextSegment> createEmbeddingStore(String fileName) {
 
-        // Chargement du document PDF
-        Document document = ClassPathDocumentLoader.loadDocument(
-                fileName,
-                new ApacheTikaDocumentParser()
-        );
+        try {
 
-        // Découpage du document en segments
-        List<TextSegment> segments =
-                DocumentSplitters.recursive(500, 100).split(document);
+            System.out.println("\nChargement du document : " + fileName);
 
-        System.out.println("Document chargé : " + fileName);
-        System.out.println("Nombre de segments créés : " + segments.size());
+            // Chargement du document PDF
+            Document document = ClassPathDocumentLoader.loadDocument(
+                    fileName,
+                    new ApacheTikaDocumentParser()
+            );
 
-        // Création du magasin d'embeddings
-        EmbeddingStore<TextSegment> embeddingStore =
-                new InMemoryEmbeddingStore<>();
+            System.out.println("Document chargé : " + fileName);
 
-        // Génération et enregistrement des embeddings
-        embeddingStore.addAll(
-                embeddingModel.embedAll(segments).content(),
-                segments
-        );
+            // Découpage du document en segments
+            List<TextSegment> segments =
+                    DocumentSplitters.recursive(500, 100).split(document);
 
-        System.out.println("Embeddings enregistrés pour : " + fileName);
+            System.out.println(
+                    "Nombre de segments créés : " + segments.size()
+            );
 
-        return embeddingStore;
+            // Création du magasin d'embeddings
+            System.out.println("Étape 1 : création du magasin d'embeddings.");
+
+            EmbeddingStore<TextSegment> embeddingStore =
+                    new InMemoryEmbeddingStore<>();
+
+            System.out.println("Étape 2 : magasin créé.");
+
+            // Génération des embeddings
+            System.out.println(
+                    "Étape 3 : début de génération des embeddings pour "
+                            + fileName
+            );
+
+            var response = embeddingModel.embedAll(segments);
+
+            System.out.println(
+                    "Étape 4 : embeddings générés : "
+                            + response.content().size()
+            );
+
+            // Enregistrement des embeddings et des segments
+            embeddingStore.addAll(response.content(), segments);
+
+            System.out.println(
+                    "Étape 5 : embeddings enregistrés pour : " + fileName
+            );
+
+            return embeddingStore;
+
+        } catch (Exception e) {
+
+            System.err.println(
+                    "ERREUR pendant l'ingestion du document : " + fileName
+            );
+
+            e.printStackTrace();
+
+            throw new RuntimeException(
+                    "Échec de l'ingestion du document " + fileName,
+                    e
+            );
+        }
     }
 
-    /**
+    /*
      * Retriever du document sur le RAG et l'intelligence artificielle.
      */
     public ContentRetriever getRagRetriever() {
@@ -104,7 +150,7 @@ public class RagService {
                 .build();
     }
 
-    /**
+    /*
      * Retriever du document sur les réseaux informatiques.
      */
     public ContentRetriever getReseauxRetriever() {
